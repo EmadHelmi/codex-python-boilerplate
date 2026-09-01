@@ -1,0 +1,78 @@
+# Python bytecode and native artifacts
+__pycache__/
+*.py[codz]
+*$py.class
+*.so
+
+# Packaging and build outputs
+build/
+dist/
+wheels/
+*.egg
+*.egg-info/
+.eggs/
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+__pypackages__/
+
+# Tests and coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+cover/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.tox/
+.nox/
+.ipynb_checkpoints/
+
+# Linters, type checkers, and analysis tools
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pyright/
+.pytype/
+.import_linter_cache/
+cython_debug/
+
+# Local configuration, secrets, and project state
+.env
+.env.*
+!.env.example
+!.env.*.example
+.direnv/
+.local/
+
+# Local logs
+*.log
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Shared and local editor configuration
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+.history/
+.ionide/
+*.vsix
+.ropeproject/
+.spyderproject
+.spyproject
+.idea/
+
+# Operating systems
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
