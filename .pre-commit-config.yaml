@@ -29,7 +29,7 @@ repos:
       - id: uv-lock
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.4
+    rev: v0.16.5
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -63,11 +63,11 @@ repos:
         entry: uv run lint-imports
         language: system
         pass_filenames: false
-        files: ^src/db_miniature/
+        files: ^src/codex_boilerplate/
       - id: pytest-cov
         name: pytest coverage (>= 95%)
         entry: uv run pytest --cov --cov-report=term-missing
         language: system
         pass_filenames: false
-        files: ^(src/db_miniature/|tests/)
+        files: ^(src/codex_boilerplate/|tests/)
         stages: [pre-push]

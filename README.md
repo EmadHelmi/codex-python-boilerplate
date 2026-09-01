@@ -1,55 +1,62 @@
-# DB Miniature
+# Codex Python Boilerplate
 
-DB Miniature is a standalone Python tool for building a statistically and
-relationally production-shaped miniature of a MySQL database. The resulting
-database is intended for safe, local database-engineering experiments where a
-full production clone is impractical.
+Codex Python Boilerplate is an opinionated, Codex-native foundation for new
+Python projects. It combines a human-controlled agent workflow with
+progressively loaded engineering standards, a project-scoped reviewer, and a
+reproducible Python quality toolchain.
 
-The project focuses on preserving useful data characteristics rather than
-copying the same percentage of rows from every table. Those characteristics
-include schema, distributions, cardinality, temporal shape, relationship
-fan-out, aggregate integrity, rare cases, and representative row sizes.
+The repository intentionally contains no product behavior. Its package and
+single smoke test exist only to keep packaging, linting, type checking, import
+rules, testing, and coverage executable from the first commit.
 
-## Project Status
+## Included
 
-The repository currently contains the project and engineering foundation.
-Database inspection, profiling, planning, extraction, loading, and validation
-commands have not been implemented yet.
+- a concise root `AGENTS.md` working agreement;
+- repository Skills under `.agents/skills/`;
+- an independent reviewer under `.codex/agents/`;
+- project-definition and ADR templates;
+- Python 3.14 managed with `uv`;
+- Ruff, Pyright, pytest, coverage, Import Linter, and pre-commit;
+- shared VS Code recommendations and settings.
 
-The first implementation milestone will establish safe structural inspection
-and bounded, read-only profiling for MySQL.
+## Start a Project
 
-## Design Priorities
-
-- Treat the production database as read-only.
-- Prefer conservative, observable, and interruptible queries.
-- Never use naive per-table random sampling or `ORDER BY RAND()`.
-- Preserve dependency closure and business aggregate integrity.
-- Keep sampling deterministic and configuration human-reviewable.
-- Make incomplete, skipped, and approximate profile results explicit.
-- Keep credentials and sensitive configuration outside version control.
-- Remain standalone from Django unless a later integration justifies an
-  adapter.
-
-## Development
-
-The project requires Python 3.14 and uses
-[`uv`](https://docs.astral.sh/uv/) for dependency and environment management.
-
-Create or synchronize the development environment:
+Create or synchronize the environment:
 
 ```bash
 uv sync
 ```
 
-Run the current quality checks:
+Install the Git hooks:
 
 ```bash
-uv run ruff check .
-uv run ruff format --check .
-uv run pyright
-uv run lint-imports
+uv run pre-commit install --hook-type pre-commit
+uv run pre-commit install --hook-type pre-push
 ```
 
-Repository documentation and agent configuration are described in the
-[repository agent configuration](docs/project/agent-configuration.md).
+Run the complete local verification:
+
+```bash
+uv run pre-commit run --all-files
+uv run pre-commit run --all-files --hook-stage pre-push
+uv build
+```
+
+Before implementing product behavior, follow the
+[customization checklist](docs/project/customization.md), complete the
+[project definition](docs/project/definition.md), and ask Codex to start the
+project.
+
+## Agent Configuration
+
+The [agent-configuration guide](docs/project/agent-configuration.md) explains
+how `AGENTS.md`, repository Skills, project decisions, and the independent
+reviewer fit together.
+
+## Distribution
+
+This boilerplate is distributed under the [MIT License](LICENSE). Derived
+projects must preserve the license notice for copied boilerplate content.
+
+The boilerplate deliberately does not select a hosting provider or CI platform.
+Choose those integrations while customizing the derived project.

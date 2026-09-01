@@ -54,7 +54,7 @@ When standards overlap, use this order:
 
 - Organize standards by engineering concern only to help discovery. Directory and filename order do not establish
   classification, applicability, or precedence.
-- Record each standard's classification and applicability in its routed reference or migration inventory entry.
+- Record each standard's classification and applicability in its routed reference.
 - Use the narrowest routing that reliably loads a standard when needed:
   - route small cross-cutting policies from the skill for arbitrary engineering work;
   - route file-format standards only for matching files or tasks;
@@ -82,7 +82,7 @@ When standards overlap, use this order:
 | :--- | :---: | :---: |
 | Python language and standard library | 3.14.7 | 2026-08-20 |
 | uv | 0.12.x | 2026-08-20 |
-| Ruff | 0.16.3 | 2026-08-20 |
+| Ruff | 0.16.5 | 2026-09-01 |
 | Pyright | 1.1.411 | 2026-08-20 |
 | pytest | 9.1.1 | 2026-08-20 |
 | pytest-django | 4.14.0 | 2026-08-20 |

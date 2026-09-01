@@ -43,10 +43,6 @@ Read only the references that apply to the current work:
 The branch-discipline and file-authorship references are opt-in profiles. Do not apply them merely because they exist.
 Read them when the repository explicitly adopts the profile or when the user asks to evaluate adopting it.
 
-The completed Cursor-to-Codex migration is preserved in
-[`docs/project/codex-migration-inventory.md`](../../../docs/project/codex-migration-inventory.md) as historical parity
-evidence. Apply engineering guidance from this Skill and its routed references, not from the removed legacy sources.
-
 ## Application Procedure
 
 1. Identify the files, technologies, and engineering concerns affected by the task.

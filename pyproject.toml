@@ -1,24 +1,27 @@
 [project]
-name = "db-miniature"
+name = "codex-python-boilerplate"
 version = "0.1.0"
-description = "Build production-shaped miniature MySQL databases for safe local engineering experiments"
+description = "An opinionated Codex-native foundation for Python projects"
 readme = "README.md"
-authors = [{ name = "Emad Helmi", email = "emad.helmi@tabdeal.org" }]
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.14"
 dependencies = []
 
-[project.scripts]
-db-miniature = "db_miniature:main"
-
 [build-system]
-requires = ["uv_build>=0.11.28,<0.12.0"]
+requires = ["uv_build>=0.12.6,<0.13.0"]
 build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "codex_boilerplate"
 
 [dependency-groups]
 dev = [
     "import-linter>=2.14",
+    "pre-commit>=4.6.2",
     "pyright>=1.1.411",
     "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
     "ruff>=0.16.5",
 ]
 
@@ -457,7 +460,7 @@ addopts = ["-ra"]
 [tool.coverage.run]
 branch = true
 # Measure the application package rather than repository automation.
-source = ["src/db_miniature"]
+source = ["src/codex_boilerplate"]
 omit = ["*/tests/*", "*/migrations/*"]
 
 [tool.coverage.report]
@@ -475,7 +478,7 @@ MD029 = { style = "ordered" }
 MD060 = false
 
 [tool.importlinter]
-root_package = "db_miniature"
+root_package = "codex_boilerplate"
 include_external_packages = true
 exclude_type_checking_imports = false
 
@@ -483,5 +486,5 @@ exclude_type_checking_imports = false
 id = "bounded-contexts-acyclic"
 name = "Bounded contexts remain acyclic"
 type = "acyclic_siblings"
-ancestors = ["db_miniature"]
+ancestors = ["codex_boilerplate"]
 depth = 0

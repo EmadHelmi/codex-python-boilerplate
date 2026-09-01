@@ -1,11 +1,7 @@
 # Repository Agent Configuration
 
-This document explains the repository's Codex-native agent configuration and
-where each kind of instruction belongs.
-
-It is a navigation and maintenance guide. It does not replace the authoritative
-working agreement, project definition, accepted decisions, or engineering
-standards that it links to.
+This guide explains the boilerplate's Codex-native configuration and the
+responsibility of each source.
 
 ## Configuration Map
 
@@ -23,14 +19,10 @@ AGENTS.md
     └── reviewer.toml
 docs/project/
 ├── agent-configuration.md
-├── codex-migration-inventory.md
+├── customization.md
 ├── definition.md
 └── decisions/
 ```
-
-`docs/project/definition.md` is the designated project-definition location. It
-may not exist during repository initialization, but project implementation must
-not invent requirements in its absence.
 
 ## Sources of Truth
 
@@ -38,34 +30,18 @@ not invent requirements in its absence.
 | :--- | :--- |
 | [`AGENTS.md`](../../AGENTS.md) | Human-agent workflow, approval boundaries, scope control, review, and Git authorization |
 | [Engineering standards](../../.agents/skills/engineering-standards/SKILL.md) | Routing to applicable coding, testing, architecture, tooling, documentation, and repository standards |
-| [Workflow Skills](../../.agents/README.md) | Reusable procedures for bootstrap, decisions, approved implementation, and verification |
-| `docs/project/definition.md` (when created) | Product goals, scope, requirements, constraints, and definition of done |
-| [Accepted ADRs](decisions/README.md) | Meaningful technical and architectural decisions already accepted by the user |
+| [Workflow Skills](../../.agents/README.md) | Focused procedures for bootstrap, decisions, approved implementation, and verification |
+| [Project definition](definition.md) | Product goals, scope, requirements, constraints, and definition of done |
+| [Accepted ADRs](decisions/README.md) | Active meaningful technical and architectural decisions |
 | [Reviewer](../../.codex/agents/reviewer.toml) | Optional independent, report-only review after verification |
-| [Migration inventory](codex-migration-inventory.md) | Historical parity evidence for the Cursor-to-Codex conversion |
 
-Do not duplicate a normative rule across these sources. Link to its owner when
-another document needs to explain where the rule comes from.
-
-## Choosing the Right Mechanism
-
-| Need | Mechanism |
-| :--- | :---: |
-| Control how agents discuss, decide, implement, verify, and use Git | `AGENTS.md` |
-| Provide reusable engineering guidance only when relevant | Engineering-standards Skill and focused references |
-| Provide a reusable multi-step procedure | Workflow Skill |
-| Provide an independent specialist with separate instructions | Custom agent under `.codex/agents/` |
-| Enforce or automate a supported lifecycle event | Codex hook, only when its runtime semantics are explicit |
-| Record project requirements | `docs/project/definition.md` |
-| Preserve an accepted meaningful technical decision | ADR under `docs/project/decisions/` |
-
-Choose the narrowest mechanism that owns the concern. A convenient duplicate
-is still a second source of truth and can drift.
+Keep one authoritative owner for each normative statement. Link to the owner
+instead of copying its rules elsewhere.
 
 ## Working Agreement
 
-[`AGENTS.md`](../../AGENTS.md) is the authoritative behavioral contract for
-agents in this repository. It defines the human-controlled lifecycle:
+Codex reads the root `AGENTS.md` before work. The file defines the
+human-controlled lifecycle:
 
 ```text
 DISCUSS
@@ -79,96 +55,67 @@ DISCUSS
 → COMMIT APPROVAL
 ```
 
-These boundaries remain distinct. In particular, implementation approval does
-not authorize a commit, and a successful verification result does not authorize
-the next batch.
+It also routes applicable work to repository Skills. The concise root file is
+kept safely below Codex's default combined project-instruction size limit so
+that user-level instructions and future scoped files have room.
 
-## Skills and Engineering Standards
+## Skills
 
-Repository Skills live under `.agents/skills/`. Their frontmatter describes
-when Codex should load them, while their bodies define focused procedures.
+Codex discovers repository Skills under `.agents/skills/`. It initially sees
+each Skill's name and description, then loads the full `SKILL.md` only when
+the task matches or the user invokes it explicitly.
 
-The `engineering-standards` Skill uses progressive disclosure: its routing
-table selects only the references relevant to the current task. This keeps
-detailed standards available without loading every rule into every interaction.
-
+The `engineering-standards` Skill provides progressive disclosure: it loads
+governance first and then only the references relevant to the current concern.
 The workflow Skills cover distinct lifecycle activities:
 
-- `project-bootstrap` determines the next useful milestone and stops at the
-  earliest decision, clarification, or implementation-approval boundary;
-- `technical-decision` compares meaningful options and records an accepted
-  ADR-worthy decision without implementing it;
-- `implement-approved-batch` implements only the most recently approved batch;
-- `verify-change` runs risk-proportionate checks and returns control for user
+- `project-bootstrap` establishes the next useful milestone and stops at the
+  earliest decision, context, or approval boundary;
+- `technical-decision` evaluates a required meaningful choice and records an
+  accepted ADR-worthy decision without implementing it;
+- `implement-approved-batch` executes only explicitly approved scope;
+- `verify-change` performs proportionate checks and returns control for user
   review.
 
-See [the Skills guide](../../.agents/README.md) for detailed responsibilities
-and invocation guidance.
+See the [Skills guide](../../.agents/README.md) for invocation and maintenance
+guidance.
 
 ## Independent Reviewer
 
-The project-scoped reviewer is defined in
-[`.codex/agents/reviewer.toml`](../../.codex/agents/reviewer.toml).
+The project-scoped `reviewer` is a narrow custom agent under
+`.codex/agents/reviewer.toml`. Use it after implementation and verification
+when an independent perspective is likely to improve confidence. It
+reconstructs approved scope, evaluates the result against authoritative
+context, and reports prioritized evidence-backed findings without modifying
+the repository.
 
-It is intended for a separate review pass after implementation and verification
-when another perspective would add meaningful confidence. It:
+The reviewer inherits the parent session's live permission policy. Its
+`sandbox_mode = "read-only"` default and explicit report-only instructions
+provide defense in depth, but do not replace the parent's approval controls.
 
-- reconstructs the approved scope;
-- checks requirements, accepted ADRs, and engineering standards;
-- reviews correctness, architecture, security, regressions, and tests;
-- reports prioritized evidence-backed findings; and
-- does not implement repairs or authorize Git operations.
+## Hooks, MCP, and Plugins
 
-The custom agent sets `sandbox_mode = "read-only"`. A parent session's live
-runtime overrides can supersede an agent default, so the reviewer instructions
-also explicitly prohibit repository modifications.
+The boilerplate does not define repository hooks, MCP servers, or plugins.
+These integrations are valuable only when a derived project has a concrete
+recurring requirement and understands the integration's permissions, trust
+boundary, failure behavior, and maintenance cost.
 
-## Hooks and Command Approval
-
-This repository intentionally has no `.codex/hooks.json`.
-
-The legacy command guard requested interactive approval for selected shell
-mutations. Codex `PreToolUse` hooks can allow or deny supported calls, but they
-do not support that guard's interactive `ask` result. Mapping `ask` to `deny`
-would strengthen the accepted policy; mapping it to `allow` would discard the
-safety behavior.
-
-Command approval and sandbox policy therefore remain governed by
-[`AGENTS.md`](../../AGENTS.md) and Codex's native sandbox and approval flow.
-This limitation and its migration rationale are recorded in
-[ADR-0001](decisions/0001-adopt-codex-native-agent-configuration.md) and the
-[migration inventory](codex-migration-inventory.md).
-
-Add a future Codex hook only for a concrete recurring requirement whose event,
-input, output, failure behavior, trust model, and enforcement semantics are
-understood. Do not add a hook merely because a lifecycle event exists.
-
-## Optional Integrations
-
-The repository does not currently define project-level MCP servers, plugins, or
-additional custom agents. Add one only when a confirmed project requirement
-needs structured external access, distribution, or a genuinely independent
-specialist role.
-
-Adding or materially reconfiguring such an integration is a meaningful tooling
-or workflow change and must follow the decision and approval boundaries in
-`AGENTS.md`.
+Pre-commit is repository quality automation, not a Codex lifecycle hook.
+Command approval remains governed by `AGENTS.md` and Codex's native sandbox
+and approval flow.
 
 ## Maintenance Checklist
 
 When changing agent configuration:
 
 1. identify the authoritative owner for the behavior;
-2. check applicable accepted ADRs before reopening a decision;
-3. avoid duplicating normative instructions;
-4. preserve Skill and custom-agent triggering descriptions;
-5. verify version-sensitive Codex behavior against current official
-   documentation;
-6. keep optional profiles conditional unless the project explicitly adopts
-   them;
-7. run targeted format, parse, link, and parity checks; and
-8. obtain separate approval for implementation, removal, and Git operations as
-   required.
+2. check applicable accepted ADRs;
+3. use the narrowest native mechanism;
+4. avoid duplicated normative instructions;
+5. keep Skill descriptions concise and discriminating;
+6. verify version-sensitive behavior against official documentation;
+7. run format, parse, link, and behavioral checks; and
+8. preserve implementation, review, and Git approval boundaries.
 
 ## Official References
 
