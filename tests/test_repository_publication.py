@@ -23,6 +23,7 @@ UV_HOOK_PATTERN = re.compile(
     r"repo: https://github\.com/astral-sh/uv-pre-commit\s+"
     r"rev: (?P<version>\S+)",
 )
+UV_PRE_COMMIT_DEPENDENCY = "https://github.com/astral-sh/uv-pre-commit"
 
 
 def load_ruleset() -> dict[str, Any]:
@@ -50,6 +51,16 @@ def test_uv_runtime_and_lock_hook_versions_match() -> None:
     assert _required_match(UV_VERSION_PATTERN, workflow) == _required_match(
         UV_HOOK_PATTERN, hooks
     )
+
+
+def test_dependabot_does_not_split_the_coupled_uv_update() -> None:
+    """Keep CI and hook uv upgrades in one manually reviewed change."""
+
+    dependabot = (PROJECT_ROOT / ".github/dependabot.yml").read_text(
+        encoding="utf-8"
+    )
+    assert "ignore:" in dependabot
+    assert f"dependency-name: {UV_PRE_COMMIT_DEPENDENCY}" in dependabot
 
 
 def test_packaging_metadata_uses_canonical_repository_urls() -> None:

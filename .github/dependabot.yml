@@ -25,6 +25,9 @@ updates:
       time: "06:15"
       timezone: Asia/Tehran
     open-pull-requests-limit: 5
+    ignore:
+      # Keep this revision aligned with UV_VERSION in the CI workflow.
+      - dependency-name: https://github.com/astral-sh/uv-pre-commit
     groups:
       pre-commit-hooks:
         patterns:
