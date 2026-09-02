@@ -36,5 +36,10 @@ CI and validates merge-request metadata for collaborative projects. GitLab
 security and dependency-update capabilities vary by deployment and must be
 enabled deliberately according to `.gitlab/REPOSITORY_SETTINGS.md`.
 
+The `uv-pre-commit` revision is intentionally excluded from automated
+pre-commit updates. Upgrade it manually in the same change as `UV_VERSION` in
+`.github/workflows/ci.yml`; the publication tests require those two versions
+to remain identical.
+
 The neutral profile contains no hosted automation. This is intentional and
 does not weaken the local quality gate.
