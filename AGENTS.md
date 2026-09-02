@@ -192,12 +192,13 @@ Treat these as separate boundaries:
 implementation != branch creation
 implementation != staging or commit
 commit != push
-push != merge request
-merge-request approval != merge
+push != pull or merge request
+pull- or merge-request approval != merge
 ```
 
 Do not stage, commit, create or switch branches, push, pull, merge, rebase, reset, tag, rewrite history, force-push, or
-modify a remote review without the required authorization. Never assume approval for one Git operation includes
+create or modify a pull or merge request without the required authorization. Never assume approval for one Git operation
+includes
 another.
 
 ## 8. Safety and Sensitive Material

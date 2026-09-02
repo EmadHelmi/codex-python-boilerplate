@@ -81,3 +81,4 @@ applied directly.
 | :---: | :--- | :---: | :---: |
 | [0001](0001-use-codex-native-repository-configuration.md) | Use Codex-native repository configuration | Accepted | 2026-09-01 |
 | [0002](0002-license-the-boilerplate-under-mit.md) | License the boilerplate under MIT | Accepted | 2026-09-01 |
+| [0003](0003-separate-host-and-collaboration-profiles.md) | Separate host and collaboration profiles | Accepted | 2026-09-02 |

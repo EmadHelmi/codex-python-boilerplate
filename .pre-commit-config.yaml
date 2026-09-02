@@ -69,5 +69,5 @@ repos:
         entry: uv run pytest --cov --cov-report=term-missing
         language: system
         pass_filenames: false
-        files: ^(src/codex_boilerplate/|tests/)
+        files: ^(src/codex_boilerplate/|scripts/|templates/providers/|\.github/scripts/|tests/)
         stages: [pre-push]

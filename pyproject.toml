@@ -2,11 +2,17 @@
 name = "codex-python-boilerplate"
 version = "0.1.0"
 description = "An opinionated Codex-native foundation for Python projects"
+authors = [{ name = "Emad Helmi", email = "s.emad.helmi@gmail.com" }]
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.14"
 dependencies = []
+
+[project.urls]
+Documentation = "https://github.com/EmadHelmi/codex-python-boilerplate/tree/main/docs"
+Issues = "https://github.com/EmadHelmi/codex-python-boilerplate/issues"
+Repository = "https://github.com/EmadHelmi/codex-python-boilerplate"
 
 [build-system]
 requires = ["uv_build>=0.12.6,<0.13.0"]
@@ -459,8 +465,8 @@ addopts = ["-ra"]
 
 [tool.coverage.run]
 branch = true
-# Measure the application package rather than repository automation.
-source = ["src/codex_boilerplate"]
+# Keep one-time setup and provider policy scripts verified before customization.
+source = ["src/codex_boilerplate", ".github/scripts", "scripts", "templates/providers/gitlab/.gitlab/scripts"]
 omit = ["*/tests/*", "*/migrations/*"]
 
 [tool.coverage.report]
