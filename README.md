@@ -13,44 +13,14 @@ standards, reproducible quality tooling, and selectable source-control hosting.
 
 ## Start an Independent Project
 
-Prefer GitHub's **Use this template** action. It creates a repository with an
-independent initial commit instead of inheriting the boilerplate history. Fork
-only when contributing changes back to this boilerplate.
+Create an independent repository rather than a fork unless you intend to
+contribute changes back to this boilerplate. Then follow the single linear
+[Getting Started guide](docs/getting-started.md) from repository creation
+through project setup and verification.
 
-After creating the repository, preview the one-time setup command. Choose the
-hosting provider and collaboration model independently:
-
-| Host | Collaboration | Result |
-| :--- | :--- | :--- |
-| `github` | `collaborative` | GitHub automation and public collaboration baseline |
-| `github` | `solo` | GitHub automation without public collaboration files |
-| `gitlab` | `collaborative` | GitLab automation and team collaboration baseline |
-| `gitlab` | `solo` | GitLab automation without public collaboration files |
-| `neutral` | `collaborative` | Provider-neutral team documentation and local tooling |
-| `neutral` | `solo` | Minimal provider-neutral project and local tooling |
-
-Example preview:
-
-```bash
-uv run python scripts/setup_project.py \
-  --host github \
-  --collaboration collaborative \
-  --distribution-name example-service \
-  --import-package example_service \
-  --display-name "Example Service" \
-  --description "Describe the project's value." \
-  --author-name "Your Name" \
-  --author-email "you@example.com" \
-  --project-license mit \
-  --repository-url https://github.com/example/example-service \
-  --code-owner @example
-```
-
-Review the plan, then repeat it with `--apply`. See
-[Getting Started](docs/getting-started.md) and the complete
-[customization guide](docs/project/customization.md) before applying it.
-Apply mode requires a clean Git worktree with the boilerplate baseline
-committed and stages all transformations before publishing them.
+The [customization reference](docs/project/customization.md) explains the
+available setup fields and generated behavior. Consult it when choosing values;
+the executable sequence remains in Getting Started.
 
 ## What the Baseline Provides
 

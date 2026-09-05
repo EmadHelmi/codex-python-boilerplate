@@ -434,6 +434,27 @@ def test_hosted_collaboration_requires_repository_and_owner(
         setup_project.validate_config(setup_project.SetupConfig(**base))
 
 
+@pytest.mark.parametrize("host", ["github", "gitlab"])
+def test_hosted_solo_allows_missing_repository_url(
+    setup_project: ModuleType,
+    template_root: Path,
+    host: str,
+) -> None:
+    """Allow setup before a solo hosted repository has been created."""
+
+    config = make_config(setup_project, host=host, collaboration="solo")
+    config = setup_project.SetupConfig(
+        **{**config.__dict__, "repository_url": None}
+    )
+
+    setup_project.apply_setup(template_root, config, regenerate_lock=False)
+
+    pyproject = (template_root / "pyproject.toml").read_text(encoding="utf-8")
+    readme = (template_root / "README.md").read_text(encoding="utf-8")
+    assert "[project.urls]" not in pyproject
+    assert "Repository:" not in readme
+
+
 @pytest.mark.parametrize(
     ("host", "url", "message"),
     [
@@ -662,6 +683,49 @@ def test_cli_previews_and_reports_invalid_configuration(
     arguments[arguments.index("example_service")] = "bad-package"
     assert setup_project.main(arguments) == 2
     assert "project setup failed" in capsys.readouterr().err
+
+
+def test_cli_apply_reports_virtual_environment_next_steps(
+    setup_project: ModuleType,
+    template_root: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Explain how to replace the prompt stored in an existing environment."""
+
+    monkeypatch.chdir(template_root)
+    monkeypatch.setattr(setup_project, "_run_uv_lock", lambda _root: None)
+    arguments = [
+        "--host",
+        "gitlab",
+        "--collaboration",
+        "solo",
+        "--distribution-name",
+        "example-service",
+        "--import-package",
+        "example_service",
+        "--display-name",
+        "Example Service",
+        "--description",
+        "Processes example events.",
+        "--author-name",
+        "Example Team",
+        "--author-email",
+        "team@example.com",
+        "--project-license",
+        "mit",
+        "--apply",
+    ]
+
+    assert setup_project.main(arguments) == 0
+
+    output = capsys.readouterr().out
+    assert (
+        "deactivate the current virtual environment if it is active" in output
+    )
+    assert "the next command replaces .venv" in output
+    assert 'uv venv --clear --prompt "example-service"' in output
+    assert "uv sync --locked" in output
 
 
 def test_apply_with_lock_regeneration_uses_runner(

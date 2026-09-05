@@ -1,9 +1,11 @@
 # Customizing the Boilerplate
 
-Use this checklist once, immediately after creating a repository from the
-boilerplate and before implementing product behavior. The setup command
-automates deterministic repository transformations; product, legal, security,
-and operational decisions remain explicit human work.
+Use this reference while following the linear
+[Getting Started guide](../getting-started.md). This document explains setup
+choices and generated behavior; it intentionally does not duplicate the
+executable walkthrough. The setup command automates deterministic repository
+transformations, while product, legal, security, and operational decisions
+remain explicit human work.
 
 ## 1. Choose Repository Creation and Git History
 
@@ -17,11 +19,10 @@ Prefer a template mechanism over a fork:
 - a normal clone preserves boilerplate history and is acceptable when that
   provenance is wanted.
 
-For a fresh GitLab history, use `git archive` to copy the tracked working tree
-into a new directory, run `git init -b main` there, and commit that unchanged
-baseline before customization. The setup command requires this clean recovery
-point. Commit the customized result separately after reviewing it. Do not
-delete or rewrite the source repository's history.
+For a fresh GitLab history, Getting Started provides the exact export and Git
+initialization sequence. Commit the unchanged baseline before customization so
+setup has a clean recovery point. Do not delete or rewrite the source
+repository's history.
 
 The setup command never deletes `.git`, rewrites commits, changes remotes,
 commits, or pushes. Do not rename inherited commits: either keep their history
@@ -56,13 +57,20 @@ Prepare these values:
 | Import package | `example_service` | `src/`, imports, coverage, and Import Linter |
 | Display name | `Example Service` | README and package documentation |
 | Description | `Processes example events.` | Package and repository metadata |
-| Author | `Example Team` | Package ownership metadata |
-| Author email | `team@example.com` | Package ownership metadata |
+| Author | `Example Team` | Package metadata and generated documents |
+| Author email | `team@example.com` | Package metadata and generated documents |
 | Repository URL | `https://host/group/example-service` | Hosted project links |
 | Code Owner | `@example-team` | Collaborative host ownership |
 
-Hosted profiles require a repository URL. Hosted collaborative profiles also
-require a Code Owner. Neutral profiles reject those provider-specific values.
+Hosted solo profiles accept an optional repository URL, allowing setup before
+the remote repository exists. Hosted collaborative profiles require both a
+repository URL and a Code Owner. Neutral profiles reject those
+provider-specific values.
+
+The repository URL only populates package metadata and links in generated
+files. It does not create a repository, configure a remote, or contact the
+hosting provider. Author fields likewise do not configure Git identity; follow
+Getting Started for repository-local identity and signing commands.
 
 ## 4. Decide License Treatment
 
@@ -76,26 +84,9 @@ Choose explicitly:
 The second option does not select a new project license. Apply organizational
 or legal policy separately, and never delete the inherited third-party notice.
 
-## 5. Preview and Apply
+## 5. Setup Behavior
 
-Preview first:
-
-```bash
-uv run python scripts/setup_project.py \
-  --host gitlab \
-  --collaboration collaborative \
-  --distribution-name example-service \
-  --import-package example_service \
-  --display-name "Example Service" \
-  --description "Processes example events." \
-  --author-name "Example Team" \
-  --author-email "team@example.com" \
-  --project-license unset \
-  --repository-url https://gitlab.example.com/group/example-service \
-  --code-owner @example-team
-```
-
-Inspect the plan and repeat it with `--apply`. The command:
+Getting Started owns the preview-and-apply command sequence. The command:
 
 - validates that it is running against a fresh boilerplate;
 - selects one host and one collaboration profile;
@@ -133,15 +124,9 @@ because they are not project decision history.
 
 ## 7. Configure Git and the Hosting Platform
 
-Inspect local configuration and remotes:
-
-```bash
-git config --local --list
-git remote -v
-```
-
-Set repository-local identity or signing only when it should differ from the
-user's global configuration. Never copy another project's signing key.
+Getting Started owns the commands for repository-local identity, GPG signing,
+and remote inspection. Author metadata supplied to setup is independent from
+Git configuration. Never copy another project's signing key.
 
 For GitHub, apply `.github/REPOSITORY_SETTINGS.md`. For GitLab, apply
 `.gitlab/REPOSITORY_SETTINGS.md`. These blueprints cover protected branches,
@@ -167,14 +152,8 @@ Do not add dependencies or infrastructure merely because they are common.
 
 ## 9. Verify the Result
 
-```bash
-uv lock --check
-uv run pre-commit run --all-files
-uv run pre-commit run --all-files --hook-stage pre-push
-uv build
-```
-
-Then verify manually:
+Run the complete quality-gate sequence in Getting Started, then verify
+manually:
 
 - no boilerplate identity remains in project-owned metadata;
 - exactly one provider baseline is present, or none for `neutral`;

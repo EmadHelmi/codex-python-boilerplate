@@ -45,11 +45,15 @@ the boilerplate repository's `.git` directory.
 Create the repository using the host's template or repository-copy mechanism.
 Select `neutral` during setup so GitHub and GitLab files are removed.
 
-## Create the Environment
+## Create the Initial Environment
 
 ```bash
 uv sync --locked
 ```
+
+This environment initially carries the boilerplate prompt. Project setup
+cannot safely replace an environment while its Python process is running, so a
+later step recreates it with the new distribution name.
 
 ## Preview Project Setup
 
@@ -59,8 +63,31 @@ The setup command combines two independent choices:
 - `--collaboration solo|collaborative` selects contribution infrastructure.
 
 It also requires explicit project identity, authorship, and license treatment.
-Run the example in the root README without `--apply`, inspect every reported
-action, and then apply the same command explicitly.
+The author fields populate Python package metadata and generated project
+documents; they do not configure Git identity.
+
+Preview setup first. This GitLab solo example intentionally omits
+`--repository-url`; repository links may be added to the resulting project
+metadata after the remote repository exists:
+
+```bash
+uv run python scripts/setup_project.py \
+  --host gitlab \
+  --collaboration solo \
+  --distribution-name example-service \
+  --import-package example_service \
+  --display-name "Example Service" \
+  --description "Processes example events." \
+  --author-name "Example Team" \
+  --author-email "team@example.com" \
+  --project-license mit
+```
+
+Inspect every reported action, then repeat the same command with `--apply`.
+Collaborative GitHub and GitLab projects additionally require
+`--repository-url` and `--code-owner`. A repository URL only populates package
+metadata and generated links; setup never creates a remote repository or
+changes a Git remote.
 
 `--project-license mit` keeps the root MIT license as the new project's
 license. `--project-license unset` removes the project-level license metadata
@@ -71,20 +98,60 @@ The command customizes project files, regenerates `uv.lock`, and removes its
 one-time templates and tests. It never commits, rewrites history, changes a
 remote, or pushes.
 
-## Complete the Manual Steps
+## Recreate the Project Environment
+
+If the initial environment is active, deactivate it. Then replace it so its
+shell prompt uses the new distribution name and synchronize the dependencies:
+
+```bash
+deactivate
+uv venv --clear --prompt "example-service"
+uv sync --locked
+```
+
+Omit `deactivate` when no virtual environment is active. `--clear` replaces
+the existing `.venv`; do not use it for an environment containing unrecorded
+manual changes.
+
+## Configure Git Identity and Signing
+
+Set repository-local identity when it should differ from the global Git
+configuration:
+
+```bash
+git config --local user.name "Your Name"
+git config --local user.email "you@example.com"
+```
+
+For GPG signing, list available secret keys, copy the long key ID from the
+`sec` entry, and configure signing for this repository:
+
+```bash
+gpg --list-secret-keys --keyid-format=long
+git config --local user.signingkey YOUR_KEY_ID
+git config --local commit.gpgsign true
+git config --local tag.gpgsign true
+```
+
+Verify the effective local configuration without exposing private key
+material:
+
+```bash
+git config --local --list
+```
+
+## Complete Setup and Verify
 
 After setup:
 
 1. complete `docs/project/definition.md`;
 2. decide only technical questions required for the first useful milestone;
-3. configure repository-local Git identity and signing when required;
-4. apply the selected host's documented remote settings;
-5. add only required CI secrets and integrations;
-6. install local hooks; and
-7. run the complete verification.
+3. apply the selected host's documented remote settings;
+4. add only required CI secrets and integrations;
+5. install local hooks; and
+6. run the complete verification.
 
 ```bash
-git config --local --list
 git remote -v
 uv run pre-commit install --hook-type pre-commit --hook-type pre-push
 uv lock --check
@@ -93,5 +160,5 @@ uv run pre-commit run --all-files --hook-stage pre-push
 uv build
 ```
 
-For all identity fields, manual decisions, provider behavior, and completion
-criteria, follow the [customization guide](project/customization.md).
+For the meaning and constraints of individual setup fields, consult the
+[customization reference](project/customization.md).

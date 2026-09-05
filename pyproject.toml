@@ -1,6 +1,6 @@
 [project]
 name = "codex-python-boilerplate"
-version = "1.0.0"
+version = "1.0.1"
 description = "An opinionated Codex-native foundation for Python projects"
 authors = [{ name = "Emad Helmi", email = "s.emad.helmi@gmail.com" }]
 readme = "README.md"
