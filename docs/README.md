@@ -1,9 +1,9 @@
 # Documentation
 
-- [Getting Started](getting-started.md) explains repository creation, local
-  setup, and the first verification.
-- [Customizing the Boilerplate](project/customization.md) documents every
-  automated and manual conversion step.
+- [Getting Started](getting-started.md) is the ordered walkthrough for
+  repository creation, local setup, and the first verification.
+- [Customizing the Boilerplate](project/customization.md) is the reference for
+  setup fields, choices, and generated behavior.
 - [Development Tooling](development-tooling.md) explains local and hosted
   quality gates.
 - [Agent Configuration](project/agent-configuration.md) describes Codex

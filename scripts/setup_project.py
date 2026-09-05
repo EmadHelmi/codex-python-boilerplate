@@ -181,9 +181,13 @@ def validate_config(config: SetupConfig) -> None:
                 "Neutral projects cannot use provider-specific repository "
                 "or Code Owner values."
             )
-    elif config.repository_url is None:
+    elif (
+        config.collaboration == "collaborative"
+        and config.repository_url is None
+    ):
         raise ProjectSetupError(
-            "GitHub and GitLab projects require --repository-url."
+            "Collaborative GitHub and GitLab projects require "
+            "--repository-url."
         )
     elif config.repository_url is not None:
         _validate_repository_url(config.host, config.repository_url)
@@ -950,6 +954,18 @@ def main(argv: list[str] | None = None) -> int:
         print(f"- {action}")
     if not arguments.apply:
         print("Re-run with --apply to perform these changes.")
+    else:
+        print("Next steps:")
+        print("- deactivate the current virtual environment if it is active")
+        print(
+            "- the next command replaces .venv; preserve any unrecorded "
+            "manual changes first"
+        )
+        print(
+            "- recreate the local environment with the project prompt: "
+            f'uv venv --clear --prompt "{config.distribution_name}"'
+        )
+        print("- synchronize it: uv sync --locked")
     return 0
 
 
